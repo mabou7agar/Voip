@@ -15,6 +15,15 @@ services:
     environment:
       ASTERISK_UID: ${ASTERISK_UID:-1000}
       ASTERISK_GID: ${ASTERISK_GID:-1000}
+    healthcheck:
+      # Override the image's broader health script with a direct PJSIP check.
+      test:
+        - CMD-SHELL
+        - /usr/sbin/asterisk -rx 'pjsip show version' >/dev/null 2>&1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     volumes:
       - ./etc/asterisk/pjsip.conf:/etc/asterisk/pjsip.conf:ro
       - ./etc/asterisk/extensions.conf:/etc/asterisk/extensions.conf:ro
