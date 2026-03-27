@@ -25,7 +25,8 @@ The design is intentionally small:
 ├── README.md
 ├── .env.example
 ├── docs/
-│   └── android-bridge.md
+│   ├── android-bridge.md
+│   └── android-bridge-rooted.md
 ├── android-bridge/
 │   ├── build.gradle.kts
 │   ├── settings.gradle.kts
@@ -50,10 +51,10 @@ The design is intentionally small:
 
 ## Architecture
 
-- `oldphone` is the SIP endpoint used by Linphone on the old Android phone.
-- `mainphone` is the SIP endpoint used by Zoiper or Linphone on the main phone.
-- Extension `100` rings `mainphone`.
-- Extension `200` rings `oldphone`.
+- Endpoint `100` is the SIP endpoint used by Zoiper or Linphone on the main phone.
+- Endpoint `200` is the SIP endpoint used by Linphone on the old Android phone.
+- Extension `100` rings endpoint `100`.
+- Extension `200` rings endpoint `200`.
 - Extension `900<number>` is reserved for the future Android bridge app and passes the target GSM number in a SIP header.
 
 This lets you build basic call flow quickly:
@@ -110,7 +111,7 @@ Because this configuration uses only UDP transport for SIP, TCP and TLS are not 
 
 Register both clients directly to server IP `167.235.231.202`.
 
-### mainphone
+### Endpoint 100
 
 - Username: `100`
 - Auth ID: `100`
@@ -118,7 +119,7 @@ Register both clients directly to server IP `167.235.231.202`.
 - Domain or server: `167.235.231.202`
 - Transport: `UDP`
 
-### oldphone
+### Endpoint 200
 
 - Username: `200`
 - Auth ID: `200`
@@ -129,10 +130,10 @@ Register both clients directly to server IP `167.235.231.202`.
 ## How to Test Extensions
 
 1. Register both SIP clients.
-2. From `oldphone`, dial `100`.
-3. Confirm `mainphone` rings.
-4. From `mainphone`, dial `200`.
-5. Confirm `oldphone` rings.
+2. From endpoint `200`, dial `100`.
+3. Confirm endpoint `100` rings.
+4. From endpoint `100`, dial `200`.
+5. Confirm endpoint `200` rings.
 6. Answer both directions and confirm two-way audio.
 7. Optionally dial `90015551234567` and confirm the old Android bridge SIP endpoint rings as a future outbound-GSM trigger.
 
@@ -232,6 +233,8 @@ This repository gives you the PBX core, not the Android telephony automation lay
 
 The repository now also includes an Android bridge scaffold in `android-bridge/` and a design note in `docs/android-bridge.md`. It is a starting point for a custom default-dialer bridge app, not a finished GSM gateway.
 
+If the old phone is rooted, there is now a second design note in `docs/android-bridge-rooted.md` covering a more aggressive architecture with a privileged native media helper. That rooted path is the realistic way to push beyond call control into device-specific PCM capture and injection.
+
 ## Next Step: Android Bridge
 
 The PBX in this repo is the SIP rendezvous point.
@@ -252,6 +255,7 @@ Android bridge scaffold now included:
 3. Asterisk can now send outbound bridge requests to extension pattern `900<number>`.
 4. The target GSM number is passed to the Android app through SIP header `X-Bridge-Target`.
 5. The detailed Android-side contract is documented in `docs/android-bridge.md`.
+6. A rooted-phone alternative is documented in `docs/android-bridge-rooted.md`.
 
 What this gives you immediately:
 
