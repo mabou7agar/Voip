@@ -1,0 +1,9 @@
+# Keep the expected runtime directory layout, but do not commit local state.
+var/lib/asterisk/*
+!var/lib/asterisk/.gitkeep
+
+var/log/asterisk/*
+!var/log/asterisk/.gitkeep
+
+var/spool/asterisk/*
+!var/spool/asterisk/.gitkeep

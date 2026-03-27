@@ -1,0 +1,27 @@
+services:
+  asterisk:
+    image: andrius/asterisk:18.26.4_debian-trixie
+    platform: linux/amd64
+    container_name: asterisk-gsm-bridge
+    restart: unless-stopped
+    network_mode: host
+    command:
+      - /usr/sbin/asterisk
+      - -vvvdddf
+      - -W
+      - -U
+      - asterisk
+      - -p
+    environment:
+      ASTERISK_UID: ${ASTERISK_UID:-1000}
+      ASTERISK_GID: ${ASTERISK_GID:-1000}
+    volumes:
+      - ./etc/asterisk/pjsip.conf:/etc/asterisk/pjsip.conf:ro
+      - ./etc/asterisk/extensions.conf:/etc/asterisk/extensions.conf:ro
+      - ./etc/asterisk/logger.conf:/etc/asterisk/logger.conf:ro
+      - ./etc/asterisk/modules.conf:/etc/asterisk/modules.conf:ro
+      - ./etc/asterisk/rtp.conf:/etc/asterisk/rtp.conf:ro
+      # Do not bind-mount /var/lib/asterisk from an empty host directory.
+      # The image ships docs, sounds, and runtime assets there.
+      - ./var/log/asterisk:/var/log/asterisk
+      - ./var/spool/asterisk:/var/spool/asterisk
