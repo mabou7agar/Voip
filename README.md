@@ -24,6 +24,17 @@ The design is intentionally small:
 ├── docker-compose.yml
 ├── README.md
 ├── .env.example
+├── docs/
+│   └── android-bridge.md
+├── android-bridge/
+│   ├── build.gradle.kts
+│   ├── settings.gradle.kts
+│   └── app/
+│       ├── build.gradle.kts
+│       └── src/main/
+│           ├── AndroidManifest.xml
+│           ├── java/com/mabou7agar/androidbridge/
+│           └── res/
 ├── etc/
 │   └── asterisk/
 │       ├── pjsip.conf
@@ -43,11 +54,13 @@ The design is intentionally small:
 - `mainphone` is the SIP endpoint used by Zoiper or Linphone on the main phone.
 - Extension `100` rings `mainphone`.
 - Extension `200` rings `oldphone`.
+- Extension `900<number>` is reserved for the future Android bridge app and passes the target GSM number in a SIP header.
 
 This lets you build basic call flow quickly:
 
 - dial `100` from the old Android phone to reach the main phone
 - dial `200` from the main phone to reach the old Android phone
+- dial `90015551234567` from the main phone to test the future Android bridge trigger path
 
 ## Asterisk Image Choice
 
@@ -121,6 +134,7 @@ Register both clients directly to server IP `167.235.231.202`.
 4. From `mainphone`, dial `200`.
 5. Confirm `oldphone` rings.
 6. Answer both directions and confirm two-way audio.
+7. Optionally dial `90015551234567` and confirm the old Android bridge SIP endpoint rings as a future outbound-GSM trigger.
 
 Useful Asterisk CLI checks:
 
@@ -216,6 +230,8 @@ Using an old Android phone as the GSM side is workable for a prototype, but it h
 
 This repository gives you the PBX core, not the Android telephony automation layer.
 
+The repository now also includes an Android bridge scaffold in `android-bridge/` and a design note in `docs/android-bridge.md`. It is a starting point for a custom default-dialer bridge app, not a finished GSM gateway.
+
 ## Next Step: Android Bridge
 
 The PBX in this repo is the SIP rendezvous point.
@@ -228,6 +244,14 @@ Planned connection model:
 4. Register it to Asterisk as extension `100`.
 5. Use the old phone as the reachable SIP endpoint sitting beside the SIM-based device.
 6. Add Android-side automation or a dedicated bridge app to connect cellular call events to SIP behavior.
+
+Android bridge scaffold now included:
+
+1. `android-bridge/` contains a minimal Android app skeleton.
+2. The app is structured around `InCallService`, `ConnectionService`, a foreground runtime service, and a bridge controller.
+3. Asterisk can now send outbound bridge requests to extension pattern `900<number>`.
+4. The target GSM number is passed to the Android app through SIP header `X-Bridge-Target`.
+5. The detailed Android-side contract is documented in `docs/android-bridge.md`.
 
 What this gives you immediately:
 

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Android GSM Bridge</string>
+    <string name="bridge_runtime_title">Android bridge active</string>
+    <string name="bridge_runtime_text">Watching GSM and SIP call state for extension 200</string>
+    <string name="bridge_channel_name">Bridge runtime</string>
+    <string name="bridge_summary">Default-dialer style GSM-to-SIP bridge scaffold for the old Android phone. This app is the future SIP endpoint for extension 200.</string>
+    <string name="bridge_contract">PBX contract: incoming GSM should ring extension 100. Outbound requests arrive over SIP as 900&lt;number&gt; with X-Bridge-Target.</string>
+</resources>

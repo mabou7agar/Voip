@@ -1,0 +1,10 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.AndroidBridge" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#0E6BA8</item>
+        <item name="colorPrimaryVariant">#0B4F7C</item>
+        <item name="colorSecondary">#F18F01</item>
+        <item name="android:statusBarColor">#0B4F7C</item>
+        <item name="android:navigationBarColor">#0B4F7C</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+    </style>
+</resources>
